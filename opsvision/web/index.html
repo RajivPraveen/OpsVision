@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102b3d">
+  <title>OpsVision | Operations Control Tower</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="/" aria-label="OpsVision home"><span class="brand-mark">◈</span><span>Ops<span class="brand-light">Vision</span><small>OPERATIONS INTELLIGENCE</small></span></a>
+      <div class="side-label">WORKSPACE</div>
+      <nav aria-label="Main navigation">
+        <a href="#overview" class="nav-link active"><span>▦</span> Control tower</a>
+        <a href="#root-cause" class="nav-link"><span>⌁</span> Root cause</a>
+        <a href="#alerts" class="nav-link"><span>◉</span> Anomaly center <b id="alert-count">0</b></a>
+        <a href="#inventory" class="nav-link"><span>▤</span> Inventory risk</a>
+        <a href="#suppliers" class="nav-link"><span>◇</span> Supplier health</a>
+      </nav>
+      <div class="side-label tools-label">REPORTING</div>
+      <a class="nav-link" href="/api/report" target="_blank" rel="noopener"><span>⇩</span> Executive report</a>
+      <div class="sidebar-bottom"><span class="live-dot"></span> Sample data connected<br><small>Local operations database</small></div>
+    </aside>
+    <main class="main" id="overview">
+      <header class="topbar">
+        <div class="breadcrumb">Workspace <span>/</span> Supply chain <span>/</span> <strong>Control tower</strong></div>
+        <div class="top-actions"><span class="data-badge"><span class="live-dot"></span> LIVE ANALYSIS</span><a class="report-button" href="/api/report" target="_blank" rel="noopener">↗ &nbsp;Weekly report</a></div>
+      </header>
+      <div class="content">
+        <section class="hero">
+          <div><div class="eyebrow">SUPPLY CHAIN COMMAND CENTER</div><h1>Operations at a glance<span class="hero-period" id="hero-period"></span></h1><p>Spot performance shifts, trace the drivers, and act before small signals become service failures.</p></div>
+          <div class="hero-emblem" aria-hidden="true"><span>◈</span><i></i></div>
+        </section>
+        <section class="filter-bar" aria-label="Analysis filters">
+          <div class="filter-heading"><span class="filter-icon">☷</span><strong>Analysis scope</strong><small>Changes apply instantly</small></div>
+          <label>Period<select id="days"><option value="7">Last 7 days</option><option value="28" selected>Last 28 days</option><option value="90">Last 90 days</option></select></label>
+          <label>Supplier<select id="supplier"><option value="">All suppliers</option></select></label>
+          <label>Plant<select id="plant"><option value="">All plants</option></select></label>
+          <label>Geography<select id="geography"><option value="">All regions</option></select></label>
+          <label>Product<select id="product"><option value="">All products</option></select></label>
+          <label>Material<select id="material"><option value="">All materials</option></select></label>
+          <button id="reset" class="reset-button" type="button">Reset</button>
+        </section>
+        <div id="error" class="error" hidden></div>
+        <section class="section-intro"><div><div class="eyebrow dark">PERFORMANCE SNAPSHOT</div><h2>Key operating signals</h2></div><span class="date-range" id="date-range"></span></section>
+        <section class="kpi-grid" id="kpi-grid" aria-label="Key performance indicators"></section>
+        <section class="analysis-grid">
+          <article class="panel root-panel" id="root-cause"><div class="panel-head"><div><div class="eyebrow dark">ROOT CAUSE ANALYTICS</div><h2>What changed in OTIF?</h2><p>Exact percentage-point bridge from the prior period</p></div><div class="delta-pill" id="otif-delta"></div></div><div class="bridge-summary" id="bridge-summary"></div><div id="cause-bars" class="cause-bars"></div><div class="panel-foot">Each late or short order has one primary failure reason. Contributions sum to the OTIF change.</div></article>
+          <article class="panel trend-panel"><div class="panel-head"><div><div class="eyebrow dark">SERVICE TREND</div><h2>Weekly OTIF</h2><p>Rolling operational history</p></div><span class="legend"><i></i> OTIF</span></div><div class="trend-wrap" id="trend-chart"></div><div class="trend-bottom"><span>Target <strong>95%</strong></span><span id="trend-current"></span></div></article>
+        </section>
+        <section class="analysis-grid lower-grid">
+          <article class="panel" id="alerts"><div class="panel-head"><div><div class="eyebrow dark">EARLY WARNING</div><h2>Anomaly center</h2><p>Recent observations vs a 90-day process baseline</p></div><span class="count-pill" id="anomaly-pill"></span></div><div class="alert-list" id="alert-list"></div></article>
+          <article class="panel"><div class="panel-head"><div><div class="eyebrow dark">DIMENSION EXPLORER</div><h2>Where did it change?</h2><p>Contribution to total OTIF movement</p></div><select id="dimension" aria-label="Drilldown dimension"><option value="supplier">By supplier</option><option value="plant">By plant</option><option value="geography">By geography</option><option value="product">By product</option><option value="material">By material</option></select></div><div class="table-wrap"><table><thead><tr><th>Segment</th><th>OTIF</th><th>Δ impact</th></tr></thead><tbody id="segment-rows"></tbody></table></div></article>
+        </section>
+        <section class="bottom-grid">
+          <article class="panel" id="inventory"><div class="panel-head"><div><div class="eyebrow dark">WORKING CAPITAL</div><h2>Inventory risk watch</h2><p>Lowest available days of cover</p></div><span class="micro-icon">▤</span></div><div class="table-wrap"><table><thead><tr><th>Product / warehouse</th><th>Available</th><th>Cover</th></tr></thead><tbody id="inventory-rows"></tbody></table></div></article>
+          <article class="panel" id="suppliers"><div class="panel-head"><div><div class="eyebrow dark">PARTNER PERFORMANCE</div><h2>Supplier scorecard</h2><p>OTIF on orders sourced by supplier</p></div><span class="micro-icon">◇</span></div><div class="table-wrap"><table><thead><tr><th>Supplier</th><th>Orders</th><th>OTIF</th></tr></thead><tbody id="supplier-rows"></tbody></table></div></article>
+        </section>
+        <section class="panel forecast-panel"><div class="panel-head"><div><div class="eyebrow dark">DEMAND OUTLOOK</div><h2>Forecast deviation watch</h2><p>Recent forecast bias and next 14-day demand estimate</p></div><span class="model-tag">Weekday + trend model</span></div><div class="forecast-list" id="forecast-list"></div></section>
+        <footer>OpsVision · Sample operations data <span>Orders · purchasing · inventory · manufacturing · shipping · quality</span></footer>
+      </div>
+    </main>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>
