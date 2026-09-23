@@ -116,7 +116,7 @@ Select **Weekly report** in the dashboard to open a printable summary. It covers
   <img src="docs/images/report.png" alt="A one-page weekly OpsVision report with measures, delivery reasons, alerts, and stock risks" width="680">
 </p>
 
-The ready-to-enable [GitHub Actions template](automation/README.md) can create a **sample-data report** every Monday and keep it as a downloadable workflow artifact. It does not send email or publish a live company report.
+The [weekly GitHub Actions workflow](.github/workflows/weekly-report.yml) creates a **sample-data report** every Monday and keeps it as a downloadable workflow artifact. You can also run it manually from GitHub's Actions page. It does not send email or publish a live company report.
 
 ## How the pieces fit together
 
@@ -181,7 +181,7 @@ OpsVision/
 ├── docs/                      Screenshots and plain-language guides
 ├── sql/                       Standalone example queries
 ├── tests/                     Checks for the calculations and data load
-├── automation/github-actions/ Test and weekly-report workflow templates
+├── .github/workflows/         Automated checks and weekly sample report
 ├── Dockerfile                 Container setup
 └── README.md
 ~~~

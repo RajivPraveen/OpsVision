@@ -31,7 +31,7 @@ python3 -m opsvision export
 
 The tests check the eight-point delivery example, that its reason and segment breakdowns add up, that the sample produces the expected types of alerts, that the report contains its sections, that database links are valid, and that exported CSVs can be loaded back without changing the service result.
 
-Ready-to-enable [GitHub Actions templates](../automation/README.md) can run these checks on pushes and pull requests across supported Python versions. A separate Monday template builds a report from the sample data.
+[GitHub Actions](../.github/workflows/ci.yml) runs these checks on pushes and pull requests across supported Python versions. A separate [Monday workflow](../.github/workflows/weekly-report.yml) builds a report from the sample data.
 
 ## Updating a screenshot
 
