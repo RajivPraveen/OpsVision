@@ -2,13 +2,13 @@
 
 # OpsVision
 
-### See what is happening across your supply chain.
+### A supply chain analytics app for multi-site manufacturing.
 
-Track delivery, stock, suppliers, production, quality, and demand in one place. Follow a change back to the orders behind it, then share a weekly summary.
+OpsVision brings orders, purchasing, inventory, production, shipping, and quality records together. It shows what changed, where it changed, and which recorded issues contributed—then turns those findings into a weekly report.
 
 **Python 3.9+** · **SQLite** · **No runtime dependencies** · **Sample data included**
 
-[Get started](#get-started) · [Explore the app](#explore-the-app) · [Use your own data](#use-your-own-data) · [Project guide](#project-guide)
+[Purpose](#purpose-and-goals) · [Get started](#get-started) · [Explore the app](#explore-the-app) · [Use your own data](#use-your-own-data) · [Project guide](#project-guide)
 
 </div>
 
@@ -18,11 +18,34 @@ Track delivery, stock, suppliers, production, quality, and demand in one place. 
 
 > **About the data:** The screenshots and sample database show a made-up operation. They include a deliberate delivery decline so you can explore every part of the app without connecting company data.
 
+## Purpose and goals
+
+Imagine a manufacturer that buys parts from several suppliers, runs multiple plants, stores finished goods in warehouses, and ships to customers in different markets. A late order can start with a slow supplier, a stopped production line, missing stock, or transport trouble. Those events often sit in different files or systems, making it hard to see the full picture.
+
+**OpsVision's goal is to make those records useful together.** It gives operations managers, buyers, plant teams, and inventory planners a shared view of service and cost, a way to investigate a change, and a repeatable report for the following week.
+
+| Question a team needs to answer | What OpsVision provides |
+| --- | --- |
+| Are customers receiving complete orders on time? | Delivery, fill, backorder, cycle-time, and perfect-order measures, with a weekly trend. |
+| Why did delivery performance move? | A breakdown of late or short orders by their recorded main reason, plus supplier, plant, geography, product, and material views. |
+| What needs attention today? | Alerts for unusual lead times, defects, stock movements, downtime, and shipping delays; stock cover and supplier lists. |
+| What should we prepare for next? | A 14-day demand estimate, forecast misses, and a weekly summary of the main changes and risks. |
+
+The project is **an analysis and reporting tool**. It does not place purchase orders, change production schedules, or claim to prove that any single event caused a later outcome. People can use its findings to decide what to investigate and do next.
+
+### Records in, answers out
+
+OpsVision accepts ten connected areas of operations data: **orders, purchase orders, suppliers, inventory, manufacturing, shipments, returns, defects, warehouses, and products**. Plants, materials, dates, destinations, and forecasts provide the context needed to compare those records.
+
+It produces an interactive dashboard with 15 measures, a delivery-change breakdown, statistical alerts, a two-week demand outlook, spreadsheet-ready exports, and a printable weekly report. [The data guide](docs/data.md) explains the required files; [the measures guide](docs/metrics.md) defines each number.
+
 ## Get started
 
 Clone the repository, then run these commands from its root folder:
 
 ~~~bash
+git clone https://github.com/RajivPraveen/OpsVision.git
+cd OpsVision
 python3 -m opsvision seed
 python3 -m opsvision serve
 ~~~
@@ -31,11 +54,11 @@ Open **[http://127.0.0.1:8000](http://127.0.0.1:8000)**. The server can also cre
 
 | To do this | Run this |
 | --- | --- |
-| Open the dashboard | python3 -m opsvision serve |
-| Rebuild the sample data | python3 -m opsvision seed |
-| Create the weekly report | python3 -m opsvision report |
-| Export spreadsheet files | python3 -m opsvision export |
-| Run the checks | python3 -m unittest discover -s tests -v |
+| Open the dashboard | <code>python3 -m opsvision serve</code> |
+| Rebuild the sample data | <code>python3 -m opsvision seed</code> |
+| Create the weekly report | <code>python3 -m opsvision report</code> |
+| Export spreadsheet files | <code>python3 -m opsvision export</code> |
+| Run the checks | <code>python3 -m unittest discover -s tests -v</code> |
 
 The report is written to reports/; spreadsheet-friendly CSV files go to exports/. These folders are created when needed.
 
@@ -50,6 +73,18 @@ The sample has **4,900 order lines** across 196 days. Its latest month records *
 ### 2. See why delivery changed
 
 The delivery chart adds up the recorded reason for every late or short order. In the sample, supplier delays account for about **3.14 points** of the eight-point drop; production downtime, stock shortages, and transport delays explain the rest. The chart and the weekly trend sit side by side.
+
+Each 28-day period has **700 order lines**. The prior period had **42** late or short lines; the current one has **98**. That is why on-time, in-full delivery moves from 94% to 86%:
+
+| Recorded main reason | Prior period | Current period | Effect on delivery rate |
+| --- | ---: | ---: | ---: |
+| Supplier delays | 10 | 32 | −3.14 points |
+| Production downtime | 9 | 27 | −2.57 points |
+| Inventory shortages | 7 | 17 | −1.43 points |
+| Transportation delays | 7 | 13 | −0.86 points |
+| Other | 9 | 9 | 0.00 points |
+
+The displayed values are rounded; the underlying reason shares add up to the full eight-point change. The breakdown reports what the order records say and gives the team a starting place for investigation.
 
 <p align="center">
   <img src="docs/images/service.png" alt="Delivery change broken down by supplier, production, inventory, and transport issues alongside a weekly trend" width="920">
