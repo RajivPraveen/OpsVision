@@ -2,55 +2,190 @@
 
 # OpsVision
 
-### A supply chain analytics app for multi-site manufacturing.
-
-OpsVision brings orders, purchasing, inventory, production, shipping, and quality records together. It shows what changed, where it changed, and which recorded issues contributed—then turns those findings into a weekly report.
+### Why are a factory's deliveries late, and what should the team fix first?
 
 **Python 3.9+** · **SQLite** · **No runtime dependencies** · **Sample data included**
 
-[Purpose](#purpose-and-goals) · [Get started](#get-started) · [Explore the app](#explore-the-app) · [Use your own data](#use-your-own-data) · [Project guide](#project-guide)
+[What is this?](#what-is-this) · [What it found](#what-it-found) · [The dashboard](#the-dashboard) · [KPIs](#kpis-on-the-dashboard) · [How it works](#how-it-works) · [Run it](#run-it) · [Use your own data](#use-your-own-data)
 
 </div>
 
 <p align="center">
-  <img src="docs/images/overview.png" alt="OpsVision dashboard with supply chain filters and 15 operating measures" width="1000">
+  <img src="docs/images/overview.png" alt="OpsVision: the question, the short answer, and 15 key numbers for delivery, stock, suppliers, production and cost" width="1000">
 </p>
 
-> **About the data:** The screenshots and sample database show a made-up operation. They include a deliberate delivery decline so you can explore every part of the app without connecting company data.
+## What is this?
 
-## Purpose and goals
+**OpsVision shows a manufacturer when on-time delivery slips, which problems caused it, and where to act first.**
 
-Imagine a manufacturer that buys parts from several suppliers, runs multiple plants, stores finished goods in warehouses, and ships to customers in different markets. A late order can start with a slow supplier, a stopped production line, missing stock, or transport trouble. Those events often sit in different files or systems, making it hard to see the full picture.
+Picture a company that buys parts from several suppliers, makes products in several plants, stores them in
+warehouses and ships them to customers in different countries. A late order can start with a slow supplier, a
+stopped production line, missing stock or a shipping problem, and those records usually live in different
+systems. OpsVision puts them in one place and answers the questions an operations team asks every week:
 
-**OpsVision's goal is to make those records useful together.** It gives operations managers, buyers, plant teams, and inventory planners a shared view of service and cost, a way to investigate a change, and a repeatable report for the following week.
+| The question | Where to look |
+|---|---|
+| Are customers getting complete orders on time? | **The key numbers** and the weekly trend |
+| Why did on-time delivery get worse? | **Why deliveries got worse**: the drop split by the recorded reason |
+| Which supplier, plant, region or product is behind it? | **Where it changed** (click a row to filter the whole page) |
+| What looks unusual right now? | **Unusual changes**: supplier lead times, defects, stock, downtime, shipping |
+| What do we need to prepare for? | **Stock running low**, **Suppliers**, and **Demand for the next 2 weeks** |
 
-| Question a team needs to answer | What OpsVision provides |
-| --- | --- |
-| Are customers receiving complete orders on time? | Delivery, fill, backorder, cycle-time, and perfect-order measures, with a weekly trend. |
-| Why did delivery performance move? | A breakdown of late or short orders by their recorded main reason, plus supplier, plant, geography, product, and material views. |
-| What needs attention today? | Alerts for unusual lead times, defects, stock movements, downtime, and shipping delays; stock cover and supplier lists. |
-| What should we prepare for next? | A 14-day demand estimate, forecast misses, and a weekly summary of the main changes and risks. |
+It also produces a **one-page weekly report** for the people who won't open the dashboard.
 
-The project is **an analysis and reporting tool**. It does not place purchase orders, change production schedules, or claim to prove that any single event caused a later outcome. People can use its findings to decide what to investigate and do next.
+> **About the data:** the sample database is a made-up manufacturer, with a deliberate drop in delivery built in so
+> every part of the app has something to show. OpsVision analyses and reports; it doesn't place orders or change
+> schedules, and it doesn't claim that one event *caused* a later outcome.
 
-### Records in, answers out
+---
 
-OpsVision accepts ten connected areas of operations data: **orders, purchase orders, suppliers, inventory, manufacturing, shipments, returns, defects, warehouses, and products**. Plants, materials, dates, destinations, and forecasts provide the context needed to compare those records.
+## What it found
 
-It produces an interactive dashboard with 15 measures, a delivery-change breakdown, statistical alerts, a two-week demand outlook, spreadsheet-ready exports, and a printable weekly report. [The data guide](docs/data.md) explains the required files; [the measures guide](docs/metrics.md) defines each number.
+In the sample data, **on-time, complete delivery fell from 94% to 86%** between the two most recent 28-day periods
+(700 order lines each). Late or incomplete lines more than doubled, from 42 to 98. Every one records a main reason,
+so the 8-point drop can be split exactly:
 
-## Get started
+| Main reason recorded on the order | Before | Now | Effect on the on-time rate |
+| --- | ---: | ---: | ---: |
+| Supplier delays | 10 | 32 | **−3.14 points** |
+| Production downtime | 9 | 27 | **−2.57 points** |
+| Inventory shortages | 7 | 17 | **−1.43 points** |
+| Transportation delays | 7 | 13 | **−0.86 points** |
+| Other | 9 | 9 | 0.00 points |
 
-Clone the repository, then run these commands from its root folder:
+- **Suppliers are the biggest single cause.** Apex Components and Northstar Electronics alone account for about
+  4.7 of the 8 points, and Apex's lead time has more than doubled (from about 8 to 19 days).
+- **One plant is struggling.** At the Monterrey plant, defects are running at 9.8% (usually 2.3%) and
+  downtime averaging about 150 minutes (usually 32).
+- **One product has run out.** Logic Chip has zero stock at the Dallas warehouse.
+
+The breakdown reports what the order records say. It gives the team a starting point for investigation, not proof
+that fixing one supplier would have prevented every late order.
+
+---
+
+## The dashboard
+
+One page with the question and the short answer at the top, 15 key numbers, and six panels. Every panel has a
+one-line "How to read this", and filters (period, supplier, plant, region, product, material) update everything at once.
+
+### Why deliveries got worse, and the weekly trend
+
+<p align="center">
+  <img src="docs/images/service.png" alt="The 8-point drop in on-time delivery split by recorded reason, beside the weekly trend against a 95% target" width="920">
+</p>
+
+### Where it changed, and what looks unusual
+
+<p align="center">
+  <img src="docs/images/alerts.png" alt="Suppliers ranked by their effect on the on-time rate, and a list of unusual readings" width="920">
+</p>
+
+### Stock, suppliers and demand
+
+<p align="center">
+  <img src="docs/images/inventory.png" alt="Products with the fewest days of stock left, supplier on-time rates, and a two-week demand estimate" width="920">
+</p>
+
+### The weekly report
+
+Open **Weekly report** in the dashboard, or run the report command, for a printable one-page summary: the short
+answer, key numbers, why delivery changed, unusual readings, suppliers to review, stock running low, and forecast
+misses. A [GitHub Actions workflow](.github/workflows/weekly-report.yml) builds a sample report every Monday and
+keeps it as a downloadable artifact (it doesn't email anyone).
+
+<p align="center">
+  <img src="docs/images/report.png" alt="A one-page weekly OpsVision report" width="680">
+</p>
+
+---
+
+## KPIs on the dashboard
+
+All 15 measures, grouped as on the dashboard. Values are the last 28 days of the sample data, compared with the 28
+days before. Exact formulas are in [the measures guide](docs/metrics.md).
+
+**Delivery to customers**
+
+| KPI | What it tells you | How it's calculated | Value |
+|---|---|---|---|
+| Delivered on time & complete (OTIF) | The headline service measure | Order lines delivered by the promised date and in full ÷ all order lines | **86.0%** (was 94.0%) |
+| Units shipped of units ordered (fill rate) | How much of what customers asked for they got | Units delivered ÷ units ordered | **99.5%** (was 99.7%) |
+| Perfect orders | Orders with nothing wrong at all | On-time, complete lines with no return ÷ all order lines | **82.9%** (was 90.6%) |
+| Orders shipped short (backorder rate) | How often customers got part of an order | Lines delivered short ÷ all order lines | **3.7%** (was 2.3%) |
+| Order-to-delivery time (cycle time) | How long customers wait | Average days from order placed to delivered | **2.8 days** (was 2.6) |
+
+**Stock and suppliers**
+
+| KPI | What it tells you | How it's calculated | Value |
+|---|---|---|---|
+| Out of stock (stockout rate) | How often a product ran short | Product-warehouse days with less stock than that day's demand ÷ all such days | **1.0%** (was 0.0%) |
+| Days of stock on hand (DIO) | How long current stock would last | Days in the period ÷ stock turnover | **12.2 days** (was 11.7) |
+| Stock turnover | How efficiently stock is sold through | Cost of goods delivered ÷ average daily stock value | **2.29×** (was 2.39×) |
+| Forecast accuracy | How close demand forecasts were | 1 − (total forecast miss ÷ total actual demand) | **78.7%** (was 83.3%) |
+| Supplier lead time | How long parts take to arrive | Average days from placing a purchase order to receiving it | **9.4 days** (was 7.9) |
+
+**Production, quality and cost**
+
+| KPI | What it tells you | How it's calculated | Value |
+|---|---|---|---|
+| Good units made of units planned (yield) | How much of the plan became sellable product | Good units ÷ planned units | **94.1%** (was 96.8%) |
+| Production time lost to stoppages (downtime) | How often lines were stopped | Downtime minutes ÷ planned production minutes | **11.0%** (was 4.7%) |
+| Defective units (defect rate) | Product quality | Defective units ÷ good units produced | **3.4%** (was 1.8%) |
+| Units scrapped (scrap rate) | Waste | Scrap units ÷ planned units | **2.7%** (was 1.8%) |
+| Cost to make one unit | Unit cost | Production cost ÷ good units | **$50.84** (was $51.32) |
+
+**Analysis panels**
+
+| Panel | What it shows | How it's calculated |
+|---|---|---|
+| Why deliveries got worse | Each reason's effect on the on-time rate | Each reason's share of all order lines now minus before; the effects add up to the total change |
+| Where it changed | The same effect, by supplier, plant, region, product or material | Same method, split by the chosen dimension |
+| Unusual changes | Readings far outside their normal range | Last 14 days vs. the 90 days before; flagged beyond 2.5× the usual variation (standard deviations) |
+| Stock running low | Products about to run out | Units available ÷ average daily sales; under 7 days is flagged |
+| Demand for the next 2 weeks | Expected orders, and recent forecast misses | Weekday pattern plus a capped 4-week trend, per product and warehouse |
+
+---
+
+## How it works
+
+~~~mermaid
+flowchart LR
+  A[Orders and shipments] --> D[(SQLite database)]
+  B[Suppliers and stock] --> D
+  C[Production and quality] --> D
+  D --> E[Python calculations]
+  E --> F[Dashboard]
+  E --> G[Weekly report]
+  D --> H[CSV export]
+  classDef step fill:#ffffff,stroke:#d4d4cf,color:#1d2127
+  classDef out fill:#fdf3e7,stroke:#b45309,color:#1d2127
+  class A,B,C,D,E,H step
+  class F,G out
+~~~
+
+1. **Store.** A SQLite database holds ten connected areas of operations data: orders, purchase orders, suppliers,
+   stock, production, shipments, returns, defects, warehouses and products.
+2. **Calculate.** Python works out the 15 measures, the delivery breakdown, the unusual-change alerts and the
+   two-week demand estimate.
+3. **Show.** A lightweight browser page and the weekly report read the same calculations, so their numbers always
+   agree. Everything can also be exported to CSV for Excel, Power BI or Tableau.
+
+It uses only Python's standard library at runtime: no packages to install.
+
+---
+
+## Run it
+
+Clone the repository, then from its folder:
 
 ~~~bash
 git clone https://github.com/RajivPraveen/OpsVision.git
 cd OpsVision
-python3 -m opsvision seed
 python3 -m opsvision serve
 ~~~
 
-Open **[http://127.0.0.1:8000](http://127.0.0.1:8000)**. The server can also create the sample database on its first run, so the seed command is optional. Python 3.9 or newer is all you need for local use.
+Open **[http://127.0.0.1:8000](http://127.0.0.1:8000)**. The first run creates the sample database automatically.
 
 | To do this | Run this |
 | --- | --- |
@@ -60,84 +195,32 @@ Open **[http://127.0.0.1:8000](http://127.0.0.1:8000)**. The server can also cre
 | Export spreadsheet files | <code>python3 -m opsvision export</code> |
 | Run the checks | <code>python3 -m unittest discover -s tests -v</code> |
 
-The report is written to reports/; spreadsheet-friendly CSV files go to exports/. These folders are created when needed.
+The report is written to `reports/` and the CSV files to `exports/`.
 
-## Explore the app
+<details>
+<summary><b>Other ways to run it</b></summary>
 
-### 1. Start with the full picture
+<br>
 
-The dashboard shows **15 measures** for delivery, inventory, buying, manufacturing, quality, and cost. The default view compares the latest 28 days with the 28 days before them. Change the period or filter by supplier, plant, geography, product, or material.
+Install the command-line app:
 
-The sample has **4,900 order lines** across 196 days. Its latest month records **86% on-time, in-full delivery**, down from **94%** in the prior month.
-
-### 2. See why delivery changed
-
-The delivery chart adds up the recorded reason for every late or short order. In the sample, supplier delays account for about **3.14 points** of the eight-point drop; production downtime, stock shortages, and transport delays explain the rest. The chart and the weekly trend sit side by side.
-
-Each 28-day period has **700 order lines**. The prior period had **42** late or short lines; the current one has **98**. That is why on-time, in-full delivery moves from 94% to 86%:
-
-| Recorded main reason | Prior period | Current period | Effect on delivery rate |
-| --- | ---: | ---: | ---: |
-| Supplier delays | 10 | 32 | −3.14 points |
-| Production downtime | 9 | 27 | −2.57 points |
-| Inventory shortages | 7 | 17 | −1.43 points |
-| Transportation delays | 7 | 13 | −0.86 points |
-| Other | 9 | 9 | 0.00 points |
-
-The displayed values are rounded; the underlying reason shares add up to the full eight-point change. The breakdown reports what the order records say and gives the team a starting place for investigation.
-
-<p align="center">
-  <img src="docs/images/service.png" alt="Delivery change broken down by supplier, production, inventory, and transport issues alongside a weekly trend" width="920">
-</p>
-
-Choose a supplier, plant, geography, product, or material to see where the change happened. Click a row to filter the whole page.
-
-### 3. Catch unusual changes
-
-The alert list checks the latest 14 days against the 90 days before them. It watches supplier lead times, defect rates, stock movements, plant downtime, and shipping delays. An alert includes the current reading, the usual reading, and how far apart they are.
-
-<p align="center">
-  <img src="docs/images/alerts.png" alt="OpsVision alerts for a slower supplier, stock movement, defects, downtime, and shipping delays" width="920">
-</p>
-
-### 4. Plan stock and supplier follow-up
-
-The stock list shows which product and warehouse combinations have the fewest days of cover. The supplier list shows delivery performance by partner. The demand cards estimate the next 14 days and show where recent forecasts ran high or low.
-
-<p align="center">
-  <img src="docs/images/inventory.png" alt="Inventory cover, supplier performance, and a two-week demand outlook" width="920">
-</p>
-
-### 5. Share the weekly report
-
-Select **Weekly report** in the dashboard to open a printable summary. It covers the main measure changes, delivery reasons, unusual readings, suppliers to review, stock risks, and forecast misses. You can also create the report with the report command.
-
-<p align="center">
-  <img src="docs/images/report.png" alt="A one-page weekly OpsVision report with measures, delivery reasons, alerts, and stock risks" width="680">
-</p>
-
-The [weekly GitHub Actions workflow](.github/workflows/weekly-report.yml) creates a **sample-data report** every Monday and keeps it as a downloadable workflow artifact. You can also run it manually from GitHub's Actions page. It does not send email or publish a live company report.
-
-## How the pieces fit together
-
-~~~mermaid
-flowchart LR
-  A[Orders and shipments] --> D[(SQLite database)]
-  B[Suppliers and inventory] --> D
-  C[Production and quality] --> D
-  D --> E[Python calculations]
-  E --> F[Browser dashboard]
-  E --> G[Weekly report]
-  D --> H[CSV export]
+~~~bash
+python3 -m pip install .
+opsvision serve
 ~~~
 
-The database keeps separate records for orders, shipments, purchase orders, stock snapshots, production runs, defects, returns, and forecasts. Python calculates the measures and serves them to a lightweight browser page. The same calculations feed the weekly report, so the numbers agree across both views.
+Or run it in Docker (starts with sample data; mount a folder at `/app/data` to keep your own):
 
-**Delivery reasons are recorded on orders.** The breakdown explains those recorded reasons; it does not prove that changing one supplier or machine would have prevented every late order. [How the measures work](docs/metrics.md) explains the calculations and their limits.
+~~~bash
+docker build -t opsvision .
+docker run --rm -p 8000:8000 opsvision
+~~~
+</details>
 
 ## Use your own data
 
-The export command creates one CSV per database table with the expected column names. Map your order, warehouse, purchasing, production, and quality extracts to those columns, then load them into a **new** database:
+The export command writes one CSV per table with the expected column names. Map your order, warehouse, purchasing,
+production and quality extracts to those columns, then load them into a **new** database:
 
 ~~~bash
 python3 -m opsvision export
@@ -146,38 +229,43 @@ python3 -m opsvision serve --db data/operations.db
 python3 -m opsvision report --db data/operations.db
 ~~~
 
-The loader checks headers and table relationships. It removes an incomplete new database if a load fails. See [the data guide](docs/data.md) for the table list and preparation steps. CSV exports also open in Excel, Power BI, or Tableau.
+The loader checks the column headers and that records link up correctly, and removes the new database if a load
+fails partway. See [the data guide](docs/data.md) for the table list.
 
-## Other ways to run it
+---
 
-Install the command-line app locally:
+## Checks and scope
 
-~~~bash
-python3 -m pip install .
-opsvision serve
-~~~
+The automated tests confirm that:
 
-Or build and run the Docker image:
+- the delivery breakdown adds up exactly to the change in the on-time rate, both by reason and by supplier, plant
+  or product;
+- the sample data produces each expected type of unusual-change alert;
+- the weekly report contains all its sections;
+- every database link is valid;
+- exporting to CSV and loading it back gives the same results.
 
-~~~bash
-docker build -t opsvision .
-docker run --rm -p 8000:8000 opsvision
-~~~
+[GitHub Actions](.github/workflows/ci.yml) runs them on every push across supported Python versions.
 
-The Docker command starts with sample data. For data you want to keep between runs, mount a folder at /app/data.
+OpsVision is a local demonstration with sample data and a path to load your own extracts. Connecting to live
+business systems, controlling who can see company data, and emailing reports to people are steps for a real
+deployment.
 
-## Project guide
+<details>
+<summary><b>Project guide</b></summary>
+
+<br>
 
 ~~~text
 OpsVision/
-├── opsvision/                 Python app, calculations, database layout, and dashboard files
-│   ├── analytics.py           Measures, delivery breakdown, alerts, and forecast
+├── opsvision/                 Python app, calculations, database layout and dashboard files
+│   ├── analytics.py           Measures, delivery breakdown, alerts and forecast
 │   ├── ingest.py              CSV loader
 │   ├── report.py              Weekly HTML and Markdown report
 │   ├── schema.sql             Database tables
 │   ├── seed.py                Repeatable sample data
 │   ├── server.py              Local web server and JSON API
-│   └── web/                   Dashboard HTML, CSS, and JavaScript
+│   └── web/                   Dashboard HTML, CSS and JavaScript
 ├── docs/                      Screenshots and plain-language guides
 ├── sql/                       Standalone example queries
 ├── tests/                     Checks for the calculations and data load
@@ -189,13 +277,8 @@ OpsVision/
 | Guide | What it covers |
 | --- | --- |
 | [Data guide](docs/data.md) | Tables, CSV files, and loading your own data |
-| [Measures](docs/metrics.md) | Definitions, delivery breakdown, alerts, and forecast |
-| [Architecture](docs/architecture.md) | How the app is organized and where each number comes from |
+| [Measures](docs/metrics.md) | Definitions, delivery breakdown, alerts and forecast |
+| [Architecture](docs/architecture.md) | How the app is organised and where each number comes from |
 | [API guide](docs/api.md) | Dashboard data and report endpoints |
 | [Development](docs/development.md) | Local changes, checks, and updating screenshots |
-
-## Checks and scope
-
-Run the test command above after a change. The checks confirm that the delivery breakdown sums to the displayed change, imported CSVs keep the same results, database links are valid, and the report is generated. The project uses only Python’s standard library at runtime.
-
-OpsVision is a local demonstration, with sample data and a path to load your own extracts. Connecting directly to business systems, controlling access to company data, and sending scheduled reports to people are steps to configure for a real deployment.
+</details>
